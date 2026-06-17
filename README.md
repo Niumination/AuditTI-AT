@@ -1,16 +1,45 @@
-# React + Vite
+# Audit Pengadaan IT — Kabupaten Aceh Tengah
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Dashboard audit dan klasifikasi risiko paket pengadaan IT di lingkungan SKPK Kabupaten Aceh Tengah, didukung AI untuk mendeteksi potensi pemborosan dan pengadaan yang tidak wajar.
 
-Currently, two official plugins are available:
+## Fitur
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Dashboard Ikhtisar** — Total paket, total pagu, estimasi potensi pemborosan, dan distribusi risiko
+- **Data Paket** — Tabel lengkap seluruh paket pengadaan IT dengan filter risiko dan SKPK
+- **Audit AI** — Analisis otomatis tiap paket menggunakan Claude AI untuk mendeteksi:
+  - Spesifikasi yang berlebihan (over-spec)
+  - Pemborosan anggaran
+  - Pengadaan yang tidak pantas untuk instansi pemerintah
+- **Tambah Paket** — Input paket baru untuk diaudit
 
-## React Compiler
+## Risiko
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Level | Keterangan |
+|-------|-----------|
+| 🟢 Rendah | Pengadaan wajar, sesuai kebutuhan |
+| 🟡 Sedang | Perlu dicermati |
+| 🔴 Tinggi | Spesifikasi berlebihan atau nilai tidak wajar |
+| 🟣 Absurd | Pemborosan atau tidak pantas untuk instansi pemerintah |
+| ⚪ Belum Diaudit | Menunggu analisis AI |
 
-## Expanding the ESLint configuration
+## Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **React 19** + **Vite 8** — Frontend
+- **Claude AI (Anthropic)** — Engine klasifikasi risiko
+- **GitHub Pages** — Hosting
+
+## Deploy
+
+Push ke branch `main` → GitHub Actions build + deploy otomatis ke:
+https://niumination.github.io/AuditTI-AT/
+
+## Pengembangan
+
+```bash
+npm install
+npm run dev      # Development server
+npm run build    # Production build
+npm run preview  # Preview build
+```
+
+> **Catatan:** Data di dashboard adalah data simulasi untuk keperluan demonstrasi. Analisis AI bersifat alat bantu awal, bukan keputusan final.
