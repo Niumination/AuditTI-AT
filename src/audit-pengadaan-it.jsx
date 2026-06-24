@@ -90,17 +90,39 @@ Keterangan level:
 - high: Spesifikasi berlebihan atau nilai tidak wajar
 - absurd: Jelas pemborosan atau tidak pantas sama sekali untuk kantor pemerintah`;
 
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const key = import.meta.env.VITE_OPENROUTER_KEY;
+      const model = import.meta.env.VITE_OPENROUTER_MODEL || "google/gemini-2.0-flash-001";
+
+      if (!key) {
+        showToast("🔑 OPENROUTER_KEY belum di-set. Set VITE_OPENROUTER_KEY di .env", "err");
+        setAuditLoading(null);
+        return;
+      }
+
+      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${key}`,
+          "HTTP-Referer": window.location.origin,
+          "X-Title": "AuditTI-AT Aceh Tengah",
+        },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
+          model,
           max_tokens: 1000,
           messages: [{ role: "user", content: prompt }],
         }),
       });
+
+      if (!res.ok) {
+        const errText = await res.text().catch(() => "unknown");
+        showToast(`Gagal: API ${res.status} — ${errText.slice(0, 80)}`, "err");
+        setAuditLoading(null);
+        return;
+      }
+
       const json = await res.json();
-      const text = json.content?.map(c => c.text || "").join("") || "{}";
+      const text = json.choices?.[0]?.message?.content || "{}";
       const clean = text.replace(/```json|```/g, "").trim();
       const result = JSON.parse(clean);
 
